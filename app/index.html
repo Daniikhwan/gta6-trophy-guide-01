@@ -1,25 +1,111 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>GTA VI trophy checklist</title>
+<title>Sunset Platinum — GTA VI Trophy Guide &amp; Tracker</title>
+<meta name="description" content="Offline GTA VI trophy guide and tracker: all 55 official trophies, roadmap to platinum, missables, Next-up planner. No account, no network — progress stays in your browser.">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header>
-  <h1>GTA VI trophy checklist</h1>
-  <p id="progress">0 of 55 earned</p>
+<header class="top">
+  <div class="brand">
+    <div class="mark" aria-hidden="true">VI</div>
+    <div>
+      <h1>Sunset Platinum</h1>
+      <p class="sub">GTA VI &middot; Trophy Guide &amp; Tracker &middot; PS5 &middot; 55 trophies &middot; ~200 h to platinum &middot; difficulty 4/10 &middot; 0 online</p>
+    </div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-num"><strong id="earnedCount">0</strong><span> / 55 earned</span></div>
+    <div class="bar" role="progressbar" aria-label="Trophies earned"><div class="bar-fill" id="barFill"></div></div>
+    <div class="makeup" id="makeup"></div>
+  </div>
+  <div class="top-actions">
+    <button id="themeBtn" type="button" title="Toggle dark / light theme">Dark theme</button>
+    <button id="spoilerBtn" type="button" aria-pressed="false" title="Hide story trophy names until earned">Spoilers: shown</button>
+  </div>
 </header>
-<div class="controls">
-  <label>Grade <select id="grade"><option value="all">All</option><option value="platinum">Platinum</option><option value="gold">Gold</option><option value="silver">Silver</option><option value="bronze">Bronze</option></select></label>
-  <button id="export" type="button">Export progress</button>
-  <label class="import">Import progress <input id="import" type="file" accept="application/json"></label>
+
+<nav class="tabs" aria-label="Sections">
+  <button type="button" data-view="checklist" class="active">Checklist</button>
+  <button type="button" data-view="roadmap">Roadmap</button>
+  <button type="button" data-view="missables">Missables</button>
+  <button type="button" data-view="planner">Next-up Planner</button>
+</nav>
+
+<div class="warn" id="missableBanner">
+  <strong>Read this first:</strong> one trophy can be missed — <button type="button" class="linklike" data-open-trophy="28">Positive Mental Attitude</button>. Meditate with Lucia on the balcony of Jason&rsquo;s house in <strong>Chapter 1</strong>, after the mission <em>Down to Earth</em>. It is gone once Chapter 1 ends, and there is no mission replay. Keep a manual save at the start of every chapter.
 </div>
-<table>
-  <thead><tr><th>Earned</th><th>Trophy</th><th>Grade</th><th>How to get it</th></tr></thead>
-  <tbody id="rows"></tbody>
-</table>
+
+<main>
+  <section id="view-checklist" class="view">
+    <div class="toolbar">
+      <input id="search" type="search" placeholder="Search trophies…" aria-label="Search trophies">
+      <select id="kindFilter" aria-label="Filter by type">
+        <option value="all">All types</option>
+        <option value="story">Story</option>
+        <option value="missable">Missable</option>
+        <option value="collectible">Collectibles</option>
+        <option value="activity">Activities</option>
+        <option value="robbery">Robbery</option>
+        <option value="exploration">Exploration</option>
+        <option value="misc">Misc</option>
+      </select>
+      <select id="gradeFilter" aria-label="Filter by grade">
+        <option value="all">All grades</option>
+        <option value="platinum">Platinum</option>
+        <option value="gold">Gold</option>
+        <option value="silver">Silver</option>
+        <option value="bronze">Bronze</option>
+      </select>
+      <label class="check"><input type="checkbox" id="hideEarned"> Hide earned</label>
+      <span class="spacer"></span>
+      <button id="exportBtn" type="button">Export progress</button>
+      <label class="importBtn">Import progress <input id="importFile" type="file" accept="application/json,.json"></label>
+      <button id="resetBtn" type="button" title="Clear all earned ticks and notes">Reset</button>
+    </div>
+    <div class="layout">
+      <div class="list-col">
+        <p class="count-line" id="countLine"></p>
+        <ul class="trophy-list" id="trophyList"></ul>
+      </div>
+      <aside class="detail" id="detail" aria-live="polite">
+        <p class="detail-empty">Select a trophy to read its full guide, sources and progress target — and add your own notes.</p>
+      </aside>
+    </div>
+  </section>
+
+  <section id="view-roadmap" class="view" hidden>
+    <h2>Roadmap to Platinum</h2>
+    <p class="lede">One playthrough, about 200 hours, no online trophies, no difficulty setting, no mission medals. Cheats disable trophies and saving — never use them on your trophy save. There is no mission replay, so keep a manual save at the start and end of each chapter (10 saves) and rotate the other 5.</p>
+    <div class="stages" id="stages"></div>
+    <h3>100% Completion — what it actually asks for</h3>
+    <p>Closer to 60% true completion: any 100 optional missions, 70 of 80 challenges, 200 of 277 vehicles scanned, 100 of 255 animals studied, 300 of 397 stunts, all 8 bank jobs, all 39 gang operations, all shooting ranges and drone races, 15 of 18 meditations. Progress made during the story already counts.</p>
+  </section>
+
+  <section id="view-missables" class="view" hidden>
+    <h2>Missables &amp; Warnings</h2>
+    <p class="lede">Only one trophy is missable, but a few things are time-sensitive. Everything else stays available in free-roam after the story.</p>
+    <div id="missableList"></div>
+    <h3>Save-slot plan</h3>
+    <p>15 manual slots + 1 autosave. Keep one save at the start of each chapter and one just before the final mission, and rotate the rest for free-roam cleanup. Never use cheats on this save — they disable trophies and saving.</p>
+    <h3>Time-sensitive, but not trophy-locking</h3>
+    <p>Race Against Yago in Chapter 3 carries an hourglass icon and can fail if you leave it too long — it feeds the Strangers &amp; Freaks strand, so save first, then race the moment it appears. Some optional missions and fences disappear over time, but none of them gate a trophy.</p>
+  </section>
+
+  <section id="view-planner" class="view" hidden>
+    <h2>Next-up Planner</h2>
+    <p class="lede">Your next 5 unearned trophies, in roadmap order — finish the story first, then the 100% checklist, then the miscellaneous cleanup.</p>
+    <p><input id="plannerSearch" type="search" placeholder="Search trophies…" aria-label="Search trophies from the planner" style="padding:8px 10px;border:1px solid var(--border);border-radius:8px;background:var(--surface);min-width:280px"></p>
+    <ol class="planner" id="plannerList"></ol>
+    <p class="hint">Tick trophies off in the Checklist and this planner updates itself. <button type="button" class="linklike" data-goto="checklist">Open the checklist</button></p>
+  </section>
+</main>
+
+<footer>
+  <p>Unofficial fan guide. Not affiliated with Rockstar Games. Trophy names and descriptions are the official PlayStation list; guides are written in our own words and cite their sources on each trophy. Sources: PowerPyx, PSNProfiles, Exophase, OutputLag. Works fully offline — no network requests, no account, progress saved only in this browser.</p>
+</footer>
 <script type="module" src="app.js"></script>
 </body>
 </html>
